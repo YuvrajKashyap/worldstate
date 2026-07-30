@@ -1,0 +1,15 @@
+geometry:
+  provider: unconfigured
+  measured: false
+
+perception:
+  live_provider: unconfigured
+  scan_provider: unconfigured
+  measured: false
+
+appearance:
+  provider: unconfigured
+  measured: false
+
+# Providers remain unconfigured until the feasibility gates record compatible
+# revisions, licenses, peak VRAM, latency, and output quality.

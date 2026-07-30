@@ -1,0 +1,26 @@
+environment: development
+
+server:
+  host: 127.0.0.1
+  port: 8000
+  allowed_origins:
+    - http://127.0.0.1:5173
+    - http://localhost:5173
+
+privacy:
+  persistence_enabled: false
+  continuous_recording_enabled: false
+  persistent_person_identity_enabled: false
+  sensitive_trait_inference_enabled: false
+
+capture:
+  max_in_flight_frames: 1
+  count_skipped_intervals: true
+
+scheduler:
+  max_concurrent_gpu_jobs: 1
+  allow_concurrent_heavy_providers: false
+
+artifacts:
+  root: ./scene-store
+  expose_absolute_paths: false

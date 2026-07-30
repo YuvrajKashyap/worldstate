@@ -1,0 +1,63 @@
+# Editors and operating systems
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+*.swp
+
+# Environment and secrets
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+
+# Python
+.venv/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.ruff_cache/
+.mypy_cache/
+.pyright/
+.coverage
+htmlcov/
+dist/
+build/
+*.egg-info/
+
+# JavaScript
+node_modules/
+apps/web/dist/
+coverage/
+*.tsbuildinfo
+
+# Models and ML caches
+models/
+checkpoints/
+.cache/
+huggingface/
+wandb/
+mlruns/
+
+# Private camera and dataset material
+data/private/
+datasets/private/
+captures/
+recordings/
+uploads/
+
+# Generated WorldState artifacts
+artifacts/
+evaluation-output/
+experiment-output/
+scene-store/
+*.zarr/
+*.parquet
+*.ply
+*.glb
+*.mp4
+
+# Native builds
+native/build/
+compile_commands.json

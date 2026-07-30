@@ -1,0 +1,87 @@
+[project]
+name = "worldstate-workspace"
+version = "0.1.0"
+description = "Local-first spatial memory for physical spaces."
+requires-python = ">=3.12,<3.13"
+license = { text = "Apache-2.0" }
+
+[dependency-groups]
+dev = [
+  "httpx2>=2.9.1",
+  "hypothesis>=6.138.0",
+  "pre-commit>=4.2.0",
+  "pyright>=1.1.405",
+  "pytest>=8.4.1",
+  "pytest-cov>=6.2.1",
+  "ruff>=0.12.9",
+]
+
+[tool.uv]
+package = false
+
+[tool.uv.workspace]
+members = [
+  "packages/worldstate-core",
+  "services/api",
+]
+
+[tool.pytest.ini_options]
+addopts = "--strict-config --strict-markers --cov=worldstate_core --cov=worldstate_api --cov-report=term-missing"
+testpaths = [
+  "packages/worldstate-core/tests",
+  "services/api/tests",
+]
+
+[tool.coverage.run]
+branch = true
+source = [
+  "worldstate_core",
+  "worldstate_api",
+]
+omit = [
+  "*/__main__.py",
+  "*/ports.py",
+]
+
+[tool.coverage.report]
+fail_under = 90
+show_missing = true
+skip_covered = true
+
+[tool.ruff]
+line-length = 100
+target-version = "py312"
+src = [
+  "packages/worldstate-core/src",
+  "services/api/src",
+]
+
+[tool.ruff.lint]
+select = [
+  "ASYNC",
+  "B",
+  "E",
+  "F",
+  "I",
+  "RUF",
+  "SIM",
+  "UP",
+]
+
+[tool.ruff.lint.isort]
+known-first-party = [
+  "worldstate_api",
+  "worldstate_core",
+]
+
+[tool.pyright]
+typeCheckingMode = "strict"
+pythonVersion = "3.12"
+include = [
+  "packages/worldstate-core/src",
+  "services/api/src",
+]
+exclude = [
+  "**/__pycache__",
+]
+reportUnusedFunction = false

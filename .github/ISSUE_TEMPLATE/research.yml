@@ -1,0 +1,26 @@
+name: Research result
+description: Record a reproducible experiment or discrepancy.
+title: "[research] "
+labels: ["research"]
+body:
+  - type: textarea
+    id: question
+    attributes:
+      label: Question
+      description: Which hypothesis or baseline does this address?
+    validations:
+      required: true
+  - type: textarea
+    id: protocol
+    attributes:
+      label: Protocol
+      description: Dataset, split, configuration, commit, hardware, and seeds.
+    validations:
+      required: true
+  - type: textarea
+    id: result
+    attributes:
+      label: Result
+      description: Include raw artifact references and uncertainty.
+    validations:
+      required: true

@@ -1,0 +1,29 @@
+name: Bug
+description: Report reproducible incorrect behavior.
+title: "[bug] "
+labels: ["bug"]
+body:
+  - type: markdown
+    attributes:
+      value: Do not attach private camera frames, credentials, or local paths.
+  - type: textarea
+    id: behavior
+    attributes:
+      label: Behavior
+      description: What happened and what should have happened?
+    validations:
+      required: true
+  - type: textarea
+    id: reproduction
+    attributes:
+      label: Reproduction
+      description: Provide the smallest reproducible sequence.
+    validations:
+      required: true
+  - type: textarea
+    id: environment
+    attributes:
+      label: Environment
+      description: Commit, operating system, browser, GPU, driver, and configuration.
+    validations:
+      required: true
