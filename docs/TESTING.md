@@ -7,10 +7,14 @@ The standard verification script runs:
 - Ruff format and lint.
 - Pyright strict type checking.
 - Pytest with branch coverage.
+- Alembic upgrade/check/downgrade/upgrade.
+- Generated OpenAPI, JSON Schema, and TypeScript contract drift checks.
 - ESLint.
 - TypeScript strict build.
 - Vitest with coverage.
 - Vite production build.
+- Python and JavaScript dependency vulnerability audits.
+- Default Python dependency license policy.
 
 ## Test layers
 
@@ -45,9 +49,14 @@ The standard verification script runs:
 
 ### GPU
 
-- Fixed-provider smoke tests.
-- Memory and latency profile.
-- Real multi-view fixture.
-- Mixed-precision comparison.
+- Dynamic learned-provider tracking, latency, identity, and drift profile.
+- Persistent subprocess warm-up, reset, cancellation, and teardown.
+- Per-worker PyTorch allocated/reserved VRAM and whole-GPU capacity sampling.
+- MapAnything multi-view inference and bounded VRAM.
+- Same-origin live, scan, fallback, export, and cleanup workflow.
+- Thirty-minute acknowledgement-paced live stability soak.
 
 GPU tests are local or explicitly provisioned. They do not run in ordinary CI.
+Commands and the current measured results are documented in
+[MEASURED_STATUS.md](MEASURED_STATUS.md); raw local reports live outside Git
+under `.worldstate/benchmarks`.

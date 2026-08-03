@@ -10,9 +10,20 @@
   },
   "scripts": {
     "build": "pnpm --filter @worldstate/web build",
+    "contracts:check": "pnpm --filter @worldstate/contracts check",
+    "contracts:generate": "uv run python scripts/generate-contracts.py && pnpm --filter @worldstate/contracts generate",
     "dev:web": "pnpm --filter @worldstate/web dev",
     "lint": "pnpm --filter @worldstate/web lint",
     "test": "pnpm --filter @worldstate/web test",
     "typecheck": "pnpm --filter @worldstate/web typecheck"
+  },
+  "devDependencies": {
+    "openapi-typescript": "^7.10.1",
+    "typescript": "^5.9.3"
+  },
+  "pnpm": {
+    "overrides": {
+      "brace-expansion@<=5.0.7": "5.0.8"
+    }
   }
 }

@@ -62,11 +62,37 @@ Providers are replaceable adapters:
 - Persistence store.
 - Clock and ID providers for deterministic tests.
 
+Learned live inference runs behind a supervised spawned process. Frames cross
+that boundary through bounded shared memory rather than queue serialization.
+The worker is configured for offline Hugging Face/Transformers operation,
+returns only normalized dataclasses, and is stopped on timeout or protocol
+desynchronization. Production warms this worker before reporting healthy and
+retains it across capture sessions while resetting session-local tracking
+state. Exclusive reconstruction suspends it to release VRAM and restores it
+before the scheduler accepts another live session. Replay and OpenCV remain
+in-process because they are weight-free and used by CPU CI.
+
+The learned provider keeps heavy open-vocabulary discovery off the frame
+critical path. A single reusable background executor runs Grounding DINO, SAM,
+DINOv2, and depth at scheduled or uncertainty-triggered intervals. Between
+discoveries, forward/backward Lucas-Kanade flow, RANSAC motion estimation, and
+a bounded template fallback propagate object state. The reusable executor is a
+stability requirement: creating a new PyTorch inference thread per discovery
+caused thread-local CPU and CUDA allocator growth during sustained capture.
+
 ### Persistence
 
-Relational state belongs in SQLite. Large arrays and geometry belong in a
-content-addressed artifact store. Experiment tables belong in Parquet. Raw
-continuous webcam video is not persisted by default.
+Relational state belongs in SQLite. The supported local layout keeps the
+database, large arrays, model weights, uploads, and geometry together under
+the repository-local `.worldstate/` directory. A single bounded write-behind
+task and separate live-state/persistence locks decouple rendering from 750 ms
+durable checkpoints, so mounted-filesystem WAL latency cannot block a display
+frame. Experiment tables belong in Parquet. Raw continuous webcam video is not
+persisted by default.
+
+Artifact ownership is an explicit relational edge to a scene, session, or job.
+Scene deletion decrements those edges before reference-aware garbage
+collection, so privacy lifecycle is not inferred from filenames.
 
 ## Workload classes
 
@@ -75,7 +101,11 @@ continuous webcam video is not persisted by default.
 - Low latency.
 - One frame in flight.
 - Dropped intervals are measured.
-- Uses lightweight models and adaptive refresh.
+- Webcam pixels render directly at display cadence; overlays predict between
+  acknowledged results.
+- Uses optical-flow tracking with asynchronous semantic correction.
+- Checkpoints durable temporal memory every 750 ms while every frame remains
+  available to the live view.
 
 ### Scan
 

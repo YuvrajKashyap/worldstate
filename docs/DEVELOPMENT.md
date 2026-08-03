@@ -24,6 +24,11 @@ powershell -ExecutionPolicy Bypass -File .\scripts\dev-api.ps1
 
 Health endpoint: `http://127.0.0.1:8000/healthz`
 
+The default provider is deterministic replay. Set
+`WORLDSTATE_PROVIDER_MODE=classical` for real weight-free OpenCV foreground
+perception. Learned mode belongs in WSL after explicit setup and model
+verification.
+
 ## Web
 
 ```powershell
@@ -40,8 +45,10 @@ powershell -ExecutionPolicy Bypass -File .\scripts\verify.ps1
 
 ## Heavy providers
 
-Model access, CUDA builds, and checkpoint downloads are separate feasibility
-steps. Do not add them to bootstrap or CI. Every provider must document:
+Run `scripts/setup-wsl.ps1`, then `scripts/models.ps1 -Defaults`. Add
+`-IncludeReconstruction` only after checking storage because MapAnything is
+substantially larger. Model access, CUDA builds, and checkpoint downloads stay
+outside bootstrap and CI. Every provider documents:
 
 - Upstream repository and revision.
 - Checkpoint and license.
@@ -49,3 +56,14 @@ steps. Do not add them to bootstrap or CI. Every provider must document:
 - Hardware requirements.
 - Memory and timing profile.
 - Failure behavior and fallback.
+
+## Contracts and migrations
+
+```powershell
+pnpm contracts:generate
+uv run python scripts/verify-migrations.py
+```
+
+Generated artifacts live in `packages/contracts` and must be committed with
+backend contract changes. `scripts/verify.ps1` rejects drift. Alembic is
+configured under `services/api/alembic`.

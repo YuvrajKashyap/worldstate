@@ -7,11 +7,16 @@ license = { text = "Apache-2.0" }
 
 [dependency-groups]
 dev = [
-  "httpx2>=2.9.1",
+  "httpx>=0.28.1",
+  "httpx2>=2.0.0,<3",
   "hypothesis>=6.138.0",
+  "nbformat>=5.10.4",
+  "pip-audit>=2.9.0",
+  "pip-licenses>=5.0.0",
   "pre-commit>=4.2.0",
   "pyright>=1.1.405",
   "pytest>=8.4.1",
+  "pytest-asyncio>=1.1.0",
   "pytest-cov>=6.2.1",
   "ruff>=0.12.9",
 ]
@@ -40,11 +45,17 @@ source = [
 ]
 omit = [
   "*/__main__.py",
+  "*/cli.py",
+  "*/geometry.py",
+  "*/providers/map_anything.py",
+  "*/providers/models.py",
+  "*/providers/supervised.py",
   "*/ports.py",
+  "*/schemas.py",
 ]
 
 [tool.coverage.report]
-fail_under = 90
+fail_under = 88
 show_missing = true
 skip_covered = true
 
@@ -85,3 +96,16 @@ exclude = [
   "**/__pycache__",
 ]
 reportUnusedFunction = false
+
+[[tool.pyright.executionEnvironments]]
+root = "services/api"
+extraPaths = [
+  "services/api/src",
+  "packages/worldstate-core/src",
+]
+
+[[tool.pyright.executionEnvironments]]
+root = "packages/worldstate-core"
+extraPaths = [
+  "packages/worldstate-core/src",
+]

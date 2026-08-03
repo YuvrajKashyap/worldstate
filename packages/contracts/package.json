@@ -1,0 +1,27 @@
+{
+  "name": "@worldstate/contracts",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "files": [
+    "generated",
+    "src",
+    "fixtures"
+  ],
+  "exports": {
+    ".": {
+      "types": "./src/index.d.ts",
+      "default": "./src/index.js"
+    },
+    "./protocol": "./src/protocol.ts",
+    "./fixtures/*": "./fixtures/*"
+  },
+  "scripts": {
+    "check": "openapi-typescript openapi.json -o generated/openapi.d.ts && tsc --noEmit",
+    "generate": "openapi-typescript openapi.json -o generated/openapi.d.ts"
+  },
+  "devDependencies": {
+    "openapi-typescript": "^7.10.1",
+    "typescript": "^5.9.3"
+  }
+}

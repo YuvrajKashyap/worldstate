@@ -40,6 +40,7 @@ class EventKind(StrEnum):
     REMOVED = "removed"
     OCCLUDED = "occluded"
     REDISCOVERED = "rediscovered"
+    CONFIDENCE_CHANGED = "confidence_changed"
 
 
 def _require_utc(value: datetime, field_name: str) -> None:
@@ -82,12 +83,16 @@ class EntityState:
     confidence: float
     position_m: tuple[float, float, float] | None = None
     evidence_ids: tuple[str, ...] = field(default_factory=tuple)
+    quaternion_xyzw: tuple[float, float, float, float] | None = None
+    bounds_m: tuple[float, float, float] | None = None
+    uncertainty: float = 0.0
 
     def __post_init__(self) -> None:
         if not self.entity_id.strip():
             raise ValueError("entity_id is required")
         _require_utc(self.observed_at, "observed_at")
         _require_confidence(self.confidence)
+        _require_confidence(self.uncertainty)
         if any(not evidence_id.strip() for evidence_id in self.evidence_ids):
             raise ValueError("evidence_ids cannot contain blank values")
 

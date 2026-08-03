@@ -1,0 +1,31 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://worldstate.local/datasets/desk-change-set-v1.schema.json",
+  "title": "WorldState Desk Change Set manifest",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "dataset_id", "split", "sessions"],
+  "properties": {
+    "schema_version": { "const": 1 },
+    "dataset_id": { "type": "string", "minLength": 1 },
+    "split": { "enum": ["train", "calibration", "holdout"] },
+    "sessions": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["id", "input_sha256", "annotation_sha256", "event_count"],
+        "properties": {
+          "id": { "type": "string" },
+          "input_sha256": { "type": "string", "pattern": "^[0-9a-f]{64}$" },
+          "annotation_sha256": { "type": "string", "pattern": "^[0-9a-f]{64}$" },
+          "event_count": { "type": "integer", "minimum": 1 },
+          "device_class": { "enum": ["webcam", "phone-upload"] },
+          "lighting": { "enum": ["bright", "dim", "mixed"] },
+          "clutter": { "enum": ["low", "medium", "high"] },
+          "calibrated": { "type": "boolean" }
+        }
+      }
+    }
+  }
+}

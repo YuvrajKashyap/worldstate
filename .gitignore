@@ -3,6 +3,7 @@
 Thumbs.db
 .idea/
 .vscode/
+.claude/settings.local.json
 *.swp
 
 # Environment and secrets
@@ -48,6 +49,8 @@ recordings/
 uploads/
 
 # Generated WorldState artifacts
+.worldstate/
+.claude/settings.local.json
 artifacts/
 evaluation-output/
 experiment-output/

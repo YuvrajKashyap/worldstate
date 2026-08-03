@@ -1,0 +1,68 @@
+schema_version: 1
+
+models:
+  - id: grounding-dino-tiny
+    display_name: Grounding DINO Tiny
+    capability: open-vocabulary-discovery
+    license: Apache-2.0
+    source: hf://IDEA-Research/grounding-dino-tiny
+    revision: a2bb814dd30d776dcf7e30523b00659f4f141c71
+    relative_path: grounding-dino-tiny
+    required: true
+    gated: false
+    approximate_size_bytes: 700000000
+
+  - id: sam2.1-hiera-tiny
+    display_name: SAM 2.1 Hiera Tiny
+    capability: promptable-segmentation
+    license: Apache-2.0
+    source: https://dl.fbaipublicfiles.com/segment_anything_2/092824/sam2.1_hiera_tiny.pt
+    revision: 2b90b9f5ceec907a1c18123530e92e794ad901a4
+    relative_path: sam2.1-hiera-tiny
+    required: true
+    gated: false
+    approximate_size_bytes: 156008466
+
+  - id: dinov2-small
+    display_name: DINOv2 ViT-S/14
+    capability: appearance-embedding
+    license: Apache-2.0
+    source: hf://facebook/dinov2-small
+    revision: ed25f3a31f01632728cabb09d1542f84ab7b0056
+    relative_path: dinov2-small
+    required: true
+    gated: false
+    approximate_size_bytes: 90000000
+
+  - id: depth-anything-v2-small
+    display_name: Depth Anything V2 Small
+    capability: monocular-depth
+    license: Apache-2.0
+    source: hf://depth-anything/Depth-Anything-V2-Small-hf
+    revision: 5426e4f0f36572d16453bbda7a8389317b1bef99
+    relative_path: depth-anything-v2-small
+    required: true
+    gated: false
+    approximate_size_bytes: 100000000
+
+  - id: map-anything-apache
+    display_name: MapAnything Apache
+    capability: multiview-reconstruction
+    license: Apache-2.0
+    source: hf://facebook/map-anything-apache
+    revision: 00f9c245bbcb60522d1ed7f9e9d88462c6e3f38a
+    relative_path: map-anything-apache
+    required: true
+    gated: false
+    approximate_size_bytes: 8000000000
+
+  - id: mediapipe-hand-landmarker
+    display_name: MediaPipe Hand Landmarker Float16
+    capability: local-hand-gesture-control
+    license: Apache-2.0
+    source: https://storage.googleapis.com/mediapipe-models/hand_landmarker/hand_landmarker/float16/1/hand_landmarker.task
+    revision: float16-v1
+    relative_path: mediapipe-hand-landmarker
+    required: true
+    gated: false
+    approximate_size_bytes: 8000000

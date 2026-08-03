@@ -1,0 +1,52 @@
+{
+  "capture_session": {
+    "id": "018f0000-0000-7000-8000-000000000002",
+    "mode": "replay"
+  },
+  "expected_flow": [
+    "client.hello",
+    "server.ready",
+    "frame.result",
+    "command.submit",
+    "command.result"
+  ],
+  "protocol_version": "v1",
+  "replay": {
+    "duration_seconds": 24.0,
+    "frame_count": 240,
+    "id": "desk-change-v1",
+    "name": "Desk Change"
+  },
+  "scene": {
+    "id": "018f0000-0000-7000-8000-000000000001",
+    "name": "Replay Desk",
+    "object_prompts": [
+      "cup",
+      "book",
+      "phone"
+    ]
+  },
+  "schema_version": 1,
+  "scripted_changes": [
+    {
+      "at_seconds": 0.0,
+      "kind": "added",
+      "label": "cup"
+    },
+    {
+      "at_seconds": 6.0,
+      "kind": "moved",
+      "label": "cup"
+    },
+    {
+      "at_seconds": 12.0,
+      "kind": "missing",
+      "label": "book"
+    },
+    {
+      "at_seconds": 18.0,
+      "kind": "rediscovered",
+      "label": "book"
+    }
+  ]
+}

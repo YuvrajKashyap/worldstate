@@ -1,10 +1,25 @@
 # WorldState Product Specification
 
-Status: Approved foundation specification
+Status: Approved product specification; backend protocol v1 implemented
 Version: 0.1
 Owner: Yuvraj Kashyap
 Repository: `YuvrajKashyap/worldstate`
 Tagline: A persistent visual memory for physical spaces.
+
+## Implementation status
+
+The local backend, Claude-authored spatial frontend, secure REST/WebSocket
+contracts, temporal memory, persistence, artifact lifecycle, bounded jobs,
+scan/evaluation/export workflows, checksum-pinned models, WSL launchers,
+migrations, and generated TypeScript contracts are implemented.
+
+The default learned provider, supervised worker lifecycle, local HoloConsole
+asset, and two-view MapAnything scan are verified on the target RTX 4060
+Laptop GPU. Exact engineering measurements live in
+`docs/MEASURED_STATUS.md`. Desk Change Set accuracy, calibrated scan scale,
+and real-hand gesture-error thresholds remain targets until the operator
+captures the required physical evaluation data; they are not inferred from
+synthetic smoke tests.
 
 ## 1. Executive summary
 
@@ -849,16 +864,23 @@ before multiview reconstruction or gestures.
 - Static, persistent, transient, and historical layers remain separate.
 - Product and research systems share typed interfaces and reproducible
   artifacts.
+- Default live discovery: Grounding DINO Tiny.
+- Default live and scan segmentation: SAM 2.1 Hiera Tiny.
+- Default appearance encoder: DINOv2 ViT-S/14.
+- Default live depth: Depth Anything V2 Small.
+- Default reconstruction: MapAnything Apache, with an explicit
+  depth-assisted Open3D fallback.
+- A native performance component is not required for the current live target;
+  add one only when a measured bottleneck justifies its maintenance cost.
 
 ## 24. Deferred decisions
 
-These are decided by measured feasibility rather than preference:
+These require additional measured evidence:
 
-- The final geometry provider.
-- The final live and scan segmentation providers.
-- Whether SAM 3.1 is viable on the target GPU.
-- Whether an appearance encoder needs both DINOv2 and SigLIP 2.
-- The first native C++/CUDA optimization target.
+- Whether a future SAM variant improves accuracy enough to replace SAM 2.1
+  within the target GPU budget and license policy.
+- Whether adding SigLIP 2 materially improves persistent identity over DINOv2.
+- The first native C++/CUDA optimization target, if profiling identifies one.
 - The public benchmark dataset used for the first report.
 - Whether results justify an arXiv or workshop submission.
 

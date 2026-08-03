@@ -1,0 +1,964 @@
+{
+  "$defs": {
+    "binaryFrameEnvelope": {
+      "additionalProperties": false,
+      "description": "Documented representation of the fixed-width binary frame header.",
+      "properties": {
+        "captured_at_unix_seconds": {
+          "minimum": 0,
+          "title": "Captured At Unix Seconds",
+          "type": "number"
+        },
+        "encoding": {
+          "enum": [
+            "jpeg",
+            "webp",
+            "rgba",
+            "i420"
+          ],
+          "title": "Encoding",
+          "type": "string"
+        },
+        "height": {
+          "maximum": 4320,
+          "minimum": 1,
+          "title": "Height",
+          "type": "integer"
+        },
+        "magic": {
+          "const": "WSF1",
+          "default": "WSF1",
+          "title": "Magic",
+          "type": "string"
+        },
+        "sequence": {
+          "minimum": 0,
+          "title": "Sequence",
+          "type": "integer"
+        },
+        "width": {
+          "maximum": 7680,
+          "minimum": 1,
+          "title": "Width",
+          "type": "integer"
+        }
+      },
+      "required": [
+        "sequence",
+        "captured_at_unix_seconds",
+        "width",
+        "height",
+        "encoding"
+      ],
+      "title": "FrameEnvelopeMetadata",
+      "type": "object"
+    },
+    "clientMessage": {
+      "$defs": {
+        "ClientHello": {
+          "additionalProperties": false,
+          "properties": {
+            "prompts": {
+              "default": [],
+              "items": {
+                "type": "string"
+              },
+              "title": "Prompts",
+              "type": "array"
+            },
+            "protocol_version": {
+              "const": "v1",
+              "title": "Protocol Version",
+              "type": "string"
+            },
+            "request_id": {
+              "maxLength": 120,
+              "minLength": 1,
+              "title": "Request Id",
+              "type": "string"
+            },
+            "requested_capabilities": {
+              "default": [],
+              "items": {
+                "type": "string"
+              },
+              "title": "Requested Capabilities",
+              "type": "array"
+            },
+            "session_id": {
+              "maxLength": 36,
+              "minLength": 36,
+              "title": "Session Id",
+              "type": "string"
+            },
+            "type": {
+              "const": "client.hello",
+              "title": "Type",
+              "type": "string"
+            }
+          },
+          "required": [
+            "type",
+            "protocol_version",
+            "request_id",
+            "session_id"
+          ],
+          "title": "ClientHello",
+          "type": "object"
+        },
+        "CommandName": {
+          "enum": [
+            "select_entity",
+            "pin_entity",
+            "set_entity_visibility",
+            "set_timeline_time",
+            "query_entity",
+            "find_last_seen",
+            "start_scan",
+            "cancel_job"
+          ],
+          "title": "CommandName",
+          "type": "string"
+        },
+        "CommandSubmit": {
+          "additionalProperties": false,
+          "properties": {
+            "arguments": {
+              "additionalProperties": true,
+              "title": "Arguments",
+              "type": "object"
+            },
+            "command": {
+              "$ref": "#/$defs/CommandName"
+            },
+            "entity_id": {
+              "anyOf": [
+                {
+                  "maxLength": 36,
+                  "minLength": 36,
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "default": null,
+              "title": "Entity Id"
+            },
+            "expected_entity_state_id": {
+              "anyOf": [
+                {
+                  "maxLength": 36,
+                  "minLength": 36,
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "default": null,
+              "title": "Expected Entity State Id"
+            },
+            "idempotency_key": {
+              "maxLength": 120,
+              "minLength": 16,
+              "title": "Idempotency Key",
+              "type": "string"
+            },
+            "protocol_version": {
+              "const": "v1",
+              "title": "Protocol Version",
+              "type": "string"
+            },
+            "request_id": {
+              "maxLength": 120,
+              "minLength": 1,
+              "title": "Request Id",
+              "type": "string"
+            },
+            "scene_id": {
+              "maxLength": 36,
+              "minLength": 36,
+              "title": "Scene Id",
+              "type": "string"
+            },
+            "type": {
+              "const": "command.submit",
+              "title": "Type",
+              "type": "string"
+            }
+          },
+          "required": [
+            "type",
+            "protocol_version",
+            "request_id",
+            "idempotency_key",
+            "command",
+            "scene_id"
+          ],
+          "title": "CommandSubmit",
+          "type": "object"
+        }
+      },
+      "discriminator": {
+        "mapping": {
+          "client.hello": "#/$defs/ClientHello",
+          "command.submit": "#/$defs/CommandSubmit"
+        },
+        "propertyName": "type"
+      },
+      "oneOf": [
+        {
+          "$ref": "#/$defs/ClientHello"
+        },
+        {
+          "$ref": "#/$defs/CommandSubmit"
+        }
+      ]
+    },
+    "serverMessage": {
+      "$defs": {
+        "CommandResult": {
+          "additionalProperties": false,
+          "properties": {
+            "idempotency_key": {
+              "title": "Idempotency Key",
+              "type": "string"
+            },
+            "protocol_version": {
+              "const": "v1",
+              "default": "v1",
+              "title": "Protocol Version",
+              "type": "string"
+            },
+            "request_id": {
+              "title": "Request Id",
+              "type": "string"
+            },
+            "result": {
+              "additionalProperties": true,
+              "title": "Result",
+              "type": "object"
+            },
+            "status": {
+              "enum": [
+                "accepted",
+                "completed",
+                "rejected"
+              ],
+              "title": "Status",
+              "type": "string"
+            },
+            "type": {
+              "const": "command.result",
+              "default": "command.result",
+              "title": "Type",
+              "type": "string"
+            }
+          },
+          "required": [
+            "request_id",
+            "idempotency_key",
+            "status"
+          ],
+          "title": "CommandResult",
+          "type": "object"
+        },
+        "EventBatch": {
+          "additionalProperties": false,
+          "properties": {
+            "events": {
+              "items": {
+                "$ref": "#/$defs/WorldEventResponse"
+              },
+              "title": "Events",
+              "type": "array"
+            },
+            "protocol_version": {
+              "const": "v1",
+              "default": "v1",
+              "title": "Protocol Version",
+              "type": "string"
+            },
+            "request_id": {
+              "title": "Request Id",
+              "type": "string"
+            },
+            "scene_id": {
+              "maxLength": 36,
+              "minLength": 36,
+              "title": "Scene Id",
+              "type": "string"
+            },
+            "sequence": {
+              "minimum": 0,
+              "title": "Sequence",
+              "type": "integer"
+            },
+            "type": {
+              "const": "event.batch",
+              "default": "event.batch",
+              "title": "Type",
+              "type": "string"
+            }
+          },
+          "required": [
+            "request_id",
+            "scene_id",
+            "sequence",
+            "events"
+          ],
+          "title": "EventBatch",
+          "type": "object"
+        },
+        "EventKindValue": {
+          "enum": [
+            "added",
+            "moved",
+            "rotated",
+            "removed",
+            "occluded",
+            "rediscovered",
+            "confidence_changed"
+          ],
+          "title": "EventKindValue",
+          "type": "string"
+        },
+        "FlowSlowDown": {
+          "additionalProperties": false,
+          "properties": {
+            "protocol_version": {
+              "const": "v1",
+              "default": "v1",
+              "title": "Protocol Version",
+              "type": "string"
+            },
+            "reason": {
+              "enum": [
+                "busy",
+                "live_session_active",
+                "resource_limit"
+              ],
+              "title": "Reason",
+              "type": "string"
+            },
+            "request_id": {
+              "title": "Request Id",
+              "type": "string"
+            },
+            "retry_after_ms": {
+              "maximum": 10000,
+              "minimum": 1,
+              "title": "Retry After Ms",
+              "type": "integer"
+            },
+            "type": {
+              "const": "flow.slow_down",
+              "default": "flow.slow_down",
+              "title": "Type",
+              "type": "string"
+            }
+          },
+          "required": [
+            "request_id",
+            "retry_after_ms",
+            "reason"
+          ],
+          "title": "FlowSlowDown",
+          "type": "object"
+        },
+        "FrameMetrics": {
+          "additionalProperties": false,
+          "properties": {
+            "capture_to_result_ms": {
+              "minimum": 0,
+              "title": "Capture To Result Ms",
+              "type": "number"
+            },
+            "depth_ran": {
+              "title": "Depth Ran",
+              "type": "boolean"
+            },
+            "discovery_ran": {
+              "title": "Discovery Ran",
+              "type": "boolean"
+            },
+            "dropped_frames": {
+              "minimum": 0,
+              "title": "Dropped Frames",
+              "type": "integer"
+            },
+            "embedding_ran": {
+              "title": "Embedding Ran",
+              "type": "boolean"
+            },
+            "gpu_allocated_bytes": {
+              "anyOf": [
+                {
+                  "minimum": 0,
+                  "type": "integer"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "default": null,
+              "title": "Gpu Allocated Bytes"
+            },
+            "gpu_reserved_bytes": {
+              "anyOf": [
+                {
+                  "minimum": 0,
+                  "type": "integer"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "default": null,
+              "title": "Gpu Reserved Bytes"
+            },
+            "inference_ms": {
+              "minimum": 0,
+              "title": "Inference Ms",
+              "type": "number"
+            },
+            "queue_depth": {
+              "enum": [
+                0,
+                1
+              ],
+              "title": "Queue Depth",
+              "type": "integer"
+            },
+            "sequence": {
+              "minimum": 0,
+              "title": "Sequence",
+              "type": "integer"
+            }
+          },
+          "required": [
+            "sequence",
+            "capture_to_result_ms",
+            "inference_ms",
+            "queue_depth",
+            "dropped_frames",
+            "discovery_ran",
+            "depth_ran",
+            "embedding_ran"
+          ],
+          "title": "FrameMetrics",
+          "type": "object"
+        },
+        "FrameObject": {
+          "additionalProperties": false,
+          "properties": {
+            "bounds_m": {
+              "anyOf": [
+                {
+                  "maxItems": 3,
+                  "minItems": 3,
+                  "prefixItems": [
+                    {
+                      "type": "number"
+                    },
+                    {
+                      "type": "number"
+                    },
+                    {
+                      "type": "number"
+                    }
+                  ],
+                  "type": "array"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Bounds M"
+            },
+            "box_xyxy": {
+              "maxItems": 4,
+              "minItems": 4,
+              "prefixItems": [
+                {
+                  "type": "number"
+                },
+                {
+                  "type": "number"
+                },
+                {
+                  "type": "number"
+                },
+                {
+                  "type": "number"
+                }
+              ],
+              "title": "Box Xyxy",
+              "type": "array"
+            },
+            "confidence": {
+              "maximum": 1.0,
+              "minimum": 0.0,
+              "title": "Confidence",
+              "type": "number"
+            },
+            "entity_id": {
+              "maxLength": 36,
+              "minLength": 36,
+              "title": "Entity Id",
+              "type": "string"
+            },
+            "label": {
+              "title": "Label",
+              "type": "string"
+            },
+            "mask_artifact_id": {
+              "anyOf": [
+                {
+                  "maxLength": 36,
+                  "minLength": 36,
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "default": null,
+              "title": "Mask Artifact Id"
+            },
+            "position_m": {
+              "anyOf": [
+                {
+                  "maxItems": 3,
+                  "minItems": 3,
+                  "prefixItems": [
+                    {
+                      "type": "number"
+                    },
+                    {
+                      "type": "number"
+                    },
+                    {
+                      "type": "number"
+                    }
+                  ],
+                  "type": "array"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Position M"
+            },
+            "presence": {
+              "$ref": "#/$defs/Presence"
+            },
+            "uncertainty": {
+              "maximum": 1.0,
+              "minimum": 0.0,
+              "title": "Uncertainty",
+              "type": "number"
+            }
+          },
+          "required": [
+            "entity_id",
+            "label",
+            "confidence",
+            "uncertainty",
+            "presence",
+            "box_xyxy",
+            "position_m",
+            "bounds_m"
+          ],
+          "title": "FrameObject",
+          "type": "object"
+        },
+        "FrameResult": {
+          "additionalProperties": false,
+          "properties": {
+            "captured_at": {
+              "format": "date-time",
+              "title": "Captured At",
+              "type": "string"
+            },
+            "events": {
+              "items": {
+                "$ref": "#/$defs/WorldEventResponse"
+              },
+              "title": "Events",
+              "type": "array"
+            },
+            "metrics": {
+              "$ref": "#/$defs/FrameMetrics"
+            },
+            "objects": {
+              "items": {
+                "$ref": "#/$defs/FrameObject"
+              },
+              "title": "Objects",
+              "type": "array"
+            },
+            "presented_at": {
+              "format": "date-time",
+              "title": "Presented At",
+              "type": "string"
+            },
+            "protocol_version": {
+              "const": "v1",
+              "default": "v1",
+              "title": "Protocol Version",
+              "type": "string"
+            },
+            "quality": {
+              "additionalProperties": {
+                "type": "number"
+              },
+              "title": "Quality",
+              "type": "object"
+            },
+            "request_id": {
+              "title": "Request Id",
+              "type": "string"
+            },
+            "sequence": {
+              "minimum": 0,
+              "title": "Sequence",
+              "type": "integer"
+            },
+            "type": {
+              "const": "frame.result",
+              "default": "frame.result",
+              "title": "Type",
+              "type": "string"
+            }
+          },
+          "required": [
+            "request_id",
+            "sequence",
+            "captured_at",
+            "presented_at",
+            "objects",
+            "events",
+            "metrics",
+            "quality"
+          ],
+          "title": "FrameResult",
+          "type": "object"
+        },
+        "Presence": {
+          "enum": [
+            "visible",
+            "occluded",
+            "predicted",
+            "missing",
+            "rediscovered",
+            "archived"
+          ],
+          "title": "Presence",
+          "type": "string"
+        },
+        "ServerReady": {
+          "additionalProperties": false,
+          "properties": {
+            "accepted_capabilities": {
+              "items": {
+                "type": "string"
+              },
+              "title": "Accepted Capabilities",
+              "type": "array"
+            },
+            "limits": {
+              "$ref": "#/$defs/SystemLimits"
+            },
+            "protocol_version": {
+              "const": "v1",
+              "default": "v1",
+              "title": "Protocol Version",
+              "type": "string"
+            },
+            "provider_mode": {
+              "enum": [
+                "replay",
+                "classical",
+                "models"
+              ],
+              "title": "Provider Mode",
+              "type": "string"
+            },
+            "request_id": {
+              "title": "Request Id",
+              "type": "string"
+            },
+            "type": {
+              "const": "server.ready",
+              "default": "server.ready",
+              "title": "Type",
+              "type": "string"
+            }
+          },
+          "required": [
+            "request_id",
+            "accepted_capabilities",
+            "provider_mode",
+            "limits"
+          ],
+          "title": "ServerReady",
+          "type": "object"
+        },
+        "SystemLimits": {
+          "additionalProperties": false,
+          "properties": {
+            "max_frame_bytes": {
+              "title": "Max Frame Bytes",
+              "type": "integer"
+            },
+            "max_frame_height": {
+              "title": "Max Frame Height",
+              "type": "integer"
+            },
+            "max_frame_width": {
+              "title": "Max Frame Width",
+              "type": "integer"
+            },
+            "max_pending_jobs": {
+              "title": "Max Pending Jobs",
+              "type": "integer"
+            },
+            "max_upload_bytes": {
+              "title": "Max Upload Bytes",
+              "type": "integer"
+            },
+            "max_video_duration_seconds": {
+              "title": "Max Video Duration Seconds",
+              "type": "integer"
+            },
+            "storage_quota_bytes": {
+              "title": "Storage Quota Bytes",
+              "type": "integer"
+            }
+          },
+          "required": [
+            "max_frame_bytes",
+            "max_frame_width",
+            "max_frame_height",
+            "max_upload_bytes",
+            "max_video_duration_seconds",
+            "max_pending_jobs",
+            "storage_quota_bytes"
+          ],
+          "title": "SystemLimits",
+          "type": "object"
+        },
+        "WebSocketError": {
+          "additionalProperties": false,
+          "properties": {
+            "code": {
+              "title": "Code",
+              "type": "string"
+            },
+            "message": {
+              "title": "Message",
+              "type": "string"
+            },
+            "protocol_version": {
+              "const": "v1",
+              "default": "v1",
+              "title": "Protocol Version",
+              "type": "string"
+            },
+            "recoverable": {
+              "title": "Recoverable",
+              "type": "boolean"
+            },
+            "request_id": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Request Id"
+            },
+            "type": {
+              "const": "error",
+              "default": "error",
+              "title": "Type",
+              "type": "string"
+            }
+          },
+          "required": [
+            "request_id",
+            "code",
+            "message",
+            "recoverable"
+          ],
+          "title": "WebSocketError",
+          "type": "object"
+        },
+        "WorldEventResponse": {
+          "additionalProperties": false,
+          "properties": {
+            "confidence": {
+              "maximum": 1.0,
+              "minimum": 0.0,
+              "title": "Confidence",
+              "type": "number"
+            },
+            "entity_id": {
+              "maxLength": 36,
+              "minLength": 36,
+              "title": "Entity Id",
+              "type": "string"
+            },
+            "evidence_ids": {
+              "items": {
+                "maxLength": 36,
+                "minLength": 36,
+                "type": "string"
+              },
+              "title": "Evidence Ids",
+              "type": "array"
+            },
+            "id": {
+              "maxLength": 36,
+              "minLength": 36,
+              "title": "Id",
+              "type": "string"
+            },
+            "kind": {
+              "$ref": "#/$defs/EventKindValue"
+            },
+            "occurred_at": {
+              "format": "date-time",
+              "title": "Occurred At",
+              "type": "string"
+            },
+            "payload": {
+              "additionalProperties": true,
+              "title": "Payload",
+              "type": "object"
+            },
+            "scene_id": {
+              "maxLength": 36,
+              "minLength": 36,
+              "title": "Scene Id",
+              "type": "string"
+            }
+          },
+          "required": [
+            "id",
+            "scene_id",
+            "entity_id",
+            "kind",
+            "occurred_at",
+            "confidence",
+            "evidence_ids",
+            "payload"
+          ],
+          "title": "WorldEventResponse",
+          "type": "object"
+        },
+        "WorldPatch": {
+          "additionalProperties": false,
+          "properties": {
+            "entities": {
+              "items": {
+                "$ref": "#/$defs/FrameObject"
+              },
+              "title": "Entities",
+              "type": "array"
+            },
+            "protocol_version": {
+              "const": "v1",
+              "default": "v1",
+              "title": "Protocol Version",
+              "type": "string"
+            },
+            "request_id": {
+              "title": "Request Id",
+              "type": "string"
+            },
+            "scene_id": {
+              "maxLength": 36,
+              "minLength": 36,
+              "title": "Scene Id",
+              "type": "string"
+            },
+            "sequence": {
+              "minimum": 0,
+              "title": "Sequence",
+              "type": "integer"
+            },
+            "type": {
+              "const": "world.patch",
+              "default": "world.patch",
+              "title": "Type",
+              "type": "string"
+            }
+          },
+          "required": [
+            "request_id",
+            "scene_id",
+            "sequence",
+            "entities"
+          ],
+          "title": "WorldPatch",
+          "type": "object"
+        }
+      },
+      "discriminator": {
+        "mapping": {
+          "command.result": "#/$defs/CommandResult",
+          "error": "#/$defs/WebSocketError",
+          "event.batch": "#/$defs/EventBatch",
+          "flow.slow_down": "#/$defs/FlowSlowDown",
+          "frame.result": "#/$defs/FrameResult",
+          "server.ready": "#/$defs/ServerReady",
+          "world.patch": "#/$defs/WorldPatch"
+        },
+        "propertyName": "type"
+      },
+      "oneOf": [
+        {
+          "$ref": "#/$defs/ServerReady"
+        },
+        {
+          "$ref": "#/$defs/FrameResult"
+        },
+        {
+          "$ref": "#/$defs/WorldPatch"
+        },
+        {
+          "$ref": "#/$defs/EventBatch"
+        },
+        {
+          "$ref": "#/$defs/CommandResult"
+        },
+        {
+          "$ref": "#/$defs/FlowSlowDown"
+        },
+        {
+          "$ref": "#/$defs/WebSocketError"
+        }
+      ]
+    }
+  },
+  "$id": "https://worldstate.local/contracts/protocol-v1.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "properties": {
+    "binaryFrameEnvelope": {
+      "$ref": "#/$defs/binaryFrameEnvelope"
+    },
+    "client": {
+      "$ref": "#/$defs/clientMessage"
+    },
+    "server": {
+      "$ref": "#/$defs/serverMessage"
+    }
+  },
+  "title": "WorldState WebSocket Protocol v1",
+  "type": "object"
+}

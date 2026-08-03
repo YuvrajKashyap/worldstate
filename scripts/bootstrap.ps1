@@ -29,13 +29,14 @@ try {
 
     Invoke-Checked "Install Python 3.12" { uv python install 3.12 }
     Invoke-Checked "Synchronize Python workspace" {
-        uv sync --all-packages --group dev
+        uv sync --all-packages --group dev --locked
     }
     Invoke-Checked "Install frontend dependencies" { pnpm install }
 
     Write-Host ""
-    Write-Host "WorldState foundation is ready."
+    Write-Host "WorldState CPU/replay environment is ready."
     Write-Host "No model checkpoints were downloaded."
+    Write-Host "Run .\scripts\doctor.ps1, then use setup-wsl.ps1 for CUDA."
 }
 finally {
     Pop-Location
