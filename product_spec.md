@@ -47,7 +47,7 @@ NVIDIA GPU and an ordinary webcam.
 ### Secondary audiences
 
 - Computer-vision and spatial-computing engineers evaluating the implementation.
-- Recruiters and hiring teams assessing product judgment, ML rigor, and systems
+- Technical reviewers and engineering teams assessing product judgment, ML rigor, and systems
   engineering.
 - Researchers reproducing the experimental comparisons.
 - Developers extending the model adapters or world-state engine.
