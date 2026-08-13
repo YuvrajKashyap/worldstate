@@ -8,11 +8,17 @@ separates static geometry, movable objects, transient agents, and historical
 memory so it can explain what exists, what changed, how certain it is, and which
 observations support that conclusion.
 
+![WorldState deterministic simulation showing the live spatial-memory volume, event feed, telemetry, and perception preview](docs/assets/screenshots/02-live-spatial-memory.png)
+
+> The interface above is running WorldState's isolated deterministic desk-change
+> simulation. It is clearly labeled `SIMULATION`, uses no camera or backend, and
+> is not presented as learned-model output.
+
 The backend is implemented end to end: secure local sessions, versioned REST
 and WebSocket contracts, replay and OpenCV providers, temporal memory,
 content-addressed persistence, bounded jobs, uploaded-video reconstruction,
 evaluation, export, WSL launchers, and explicit pinned model acquisition.
-Claude owns the visual frontend under `apps/web/**`.
+The visual and interaction layer lives under `apps/web/**`.
 
 Replay and classical modes are usable without CUDA. The learned-model and
 two-view reconstruction paths are verified locally on the target RTX 4060
@@ -24,6 +30,58 @@ The learned live path uses asynchronous Grounding DINO/SAM/DINOv2/depth
 correction with per-frame optical-flow propagation and browser-side overlay
 prediction. Live display and inference are decoupled from 750 ms durable history
 checkpoints, so temporal memory does not stall the camera view.
+
+## What the system demonstrates
+
+- **Persistent object memory:** current state, historical observations,
+  confidence, uncertainty, movement trails, evidence, and lifecycle events.
+- **Temporal reasoning:** added, moved, rotated, occluded, missing, and
+  rediscovered events remain available through the Time Scrubber and Ghost Mode.
+- **Inspectable spatial state:** the memory volume, scene graph, uncertainty
+  layer, object dossiers, evidence drawer, and Last-Seen Search expose why the
+  system believes something.
+- **Strict source boundaries:** live webcam, backend replay, and browser-only
+  simulation remain visibly and structurally distinct.
+- **Local-first operation:** loopback networking, authenticated bootstrap,
+  bounded capture, no continuous video retention, and no persistent biometric
+  identity.
+
+## Visual walkthrough
+
+### Start without a camera or backend
+
+The browser-only simulation is an explicit entry path, not a hidden fallback.
+It exercises the interface with deterministic desk-change data while preserving
+the same temporal-memory concepts.
+
+![WorldState startup offering the clearly labeled deterministic simulation](docs/assets/screenshots/01-simulation-entry.png)
+
+### Inspect relationships and uncertainty
+
+| Scene graph | Uncertainty view |
+| --- | --- |
+| ![WorldState scene graph showing spatial relationships between remembered objects](docs/assets/screenshots/03-scene-graph.png) | ![WorldState uncertainty layer showing confidence volumes around remembered objects](docs/assets/screenshots/04-uncertainty-view.png) |
+
+### Open an object's memory
+
+Selecting an entity opens its lifecycle, confidence trace, uncertainty,
+position, observation times, movement trail, recent events, and evidence count.
+
+![WorldState Object Memory panel for a remembered book](docs/assets/screenshots/05-object-memory.png)
+
+### Search what the workspace remembers
+
+Last-Seen Search distinguishes an object that is currently present from one that
+was only observed in the past, then focuses the corresponding spatial record.
+
+![WorldState Last-Seen Search returning the currently observed phone](docs/assets/screenshots/06-last-seen-search.png)
+
+### Move through remembered time
+
+The Time Scrubber reconstructs earlier state without mutating live memory.
+Ghost Mode and event ticks make prior observations and changes visible.
+
+![WorldState memory-time view with Ghost Mode, scene relationships, uncertainty, and temporal event ticks](docs/assets/screenshots/07-time-scrubber-ghost-mode.png)
 
 ## Product direction
 
